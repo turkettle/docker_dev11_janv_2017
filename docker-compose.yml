@@ -7,8 +7,40 @@ services:
     container_name: 'apache'
     ports:
       - '80:80'
+    links:
+      - 'mysql:mysql.server.com'
+      - 'mailhog:mail.server.com'
     volumes:
       - '/home/aston/Documents/docker-project/html/:/var/www/html'
       - '/home/aston/Documents/docker-project/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf'
     restart: 'always'
     working_dir: '/var/www/html'
+
+  mysql:
+    image: 'mysql'
+    container_name: 'mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'paris'
+      MYSQL_DATABASE: 'library'
+      MYSQL_USER: 'acme'
+      MYSQL_PASSWORD: 'paris'
+    volumes:
+      - '/home/aston/Documents/docker-project/mysql/:/root/'
+
+  pma:
+    image: 'phpmyadmin/phpmyadmin'
+    container_name: 'pma'
+    links:
+      - 'mysql:mysql.server.com'
+    ports:
+      - '81:80'
+    environment:
+      PMA_HOST: 'mysql.server.com'
+
+  mailhog:
+    image: 'mailhog/mailhog'
+    container_name: 'mailhog'
+    ports:
+      - '8002:8025'
+
+

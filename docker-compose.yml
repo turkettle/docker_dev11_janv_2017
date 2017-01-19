@@ -1,46 +1,57 @@
 version: '2'
 services:
-  apache:
-    build:
-      context: './apache'
-      dockerfile: 'Dockerfile'
-    container_name: 'apache'
+  nginx:
+    image: 'nginx:latest'
+    container_name: 'nginx'
     ports:
       - '80:80'
-    links:
-      - 'mysql:mysql.server.com'
-      - 'mailhog:mail.server.com'
+#    links:
+#      - 'mysql:mysql.server.com'
+#      - 'mailhog:mail.server.com'
     volumes:
-      - '/home/aston/Documents/docker-project/html/:/var/www/html'
-      - '/home/aston/Documents/docker-project/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf'
-    restart: 'always'
-    working_dir: '/var/www/html'
-
-  mysql:
-    image: 'mysql'
-    container_name: 'mysql'
-    environment:
-      MYSQL_ROOT_PASSWORD: 'paris'
-      MYSQL_DATABASE: 'library'
-      MYSQL_USER: 'acme'
-      MYSQL_PASSWORD: 'paris'
-    volumes:
-      - '/home/aston/Documents/docker-project/mysql/:/root/'
-
-  pma:
-    image: 'phpmyadmin/phpmyadmin'
-    container_name: 'pma'
+      - './html:/usr/share/nginx/html'
+      - './default.conf:/etc/nginx/conf.d/default.conf'
+    working_dir: '/code'
     links:
-      - 'mysql:mysql.server.com'
-    ports:
-      - '81:80'
+      - 'php:php.server.com'
     environment:
-      PMA_HOST: 'mysql.server.com'
+      TERM: xterm
 
-  mailhog:
-    image: 'mailhog/mailhog'
-    container_name: 'mailhog'
+  php:
+    image: 'php:7-fpm'
+    volumes:
+        - './html:/usr/share/nginx/html'
     ports:
-      - '8002:8025'
+      - '9000:9000'
+    container_name: 'php'
+    environment:
+      TERM: xterm
+
+#  mysql:
+#    image: 'mysql'
+#    container_name: 'mysql'
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 'paris'
+#      MYSQL_DATABASE: 'library'
+#      MYSQL_USER: 'acme'
+#      MYSQL_PASSWORD: 'paris'
+#    volumes:
+#      - '/home/aston/Documents/docker-project/mysql/:/root/'
+
+#  pma:
+#    image: 'phpmyadmin/phpmyadmin'
+#    container_name: 'pma'
+#    links:
+#      - 'mysql:mysql.server.com'
+#    ports:
+#      - '81:80'
+#    environment:
+#      PMA_HOST: 'mysql.server.com'
+#
+#  mailhog:
+#    image: 'mailhog/mailhog'
+#    container_name: 'mailhog'
+#    ports:
+#      - '8002:8025'
 
 

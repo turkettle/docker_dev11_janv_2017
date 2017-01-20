@@ -4,7 +4,15 @@ services:
     build:
       context: './apache'
       dockerfile: 'Dockerfile'
+    extends:
+      file: '../docker-compose-common.yml'
+      service: 'apache'
     links:
       - 'mysql:mysql.server.com'
     volumes:
       - './apache/000-default.conf:/etc/apache2/sites-available/000-default.conf'
+
+  mysql:
+    extends:
+      file: '../docker-compose-common.yml'
+      service: 'mysql'

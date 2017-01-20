@@ -1,0 +1,21 @@
+version: '2'
+services:
+  apache:
+    container_name: 'apache'
+    ports:
+      - '80:80'
+    restart: 'always'
+    working_dir: '/var/www/html'
+    volumes:
+      - './html/:/var/www/html'
+
+  mysql:
+    image: 'mysql'
+    container_name: 'mysql'
+    volumes:
+      - './mysql/:/root/'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'paris'
+      MYSQL_DATABASE: 'library'
+      MYSQL_USER: 'acme'
+      MYSQL_PASSWORD: 'paris'

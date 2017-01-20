@@ -1,0 +1,10 @@
+version: '2'
+services:
+  apache:
+    build:
+      context: './apache'
+      dockerfile: 'Dockerfile'
+    links:
+      - 'mysql:mysql.server.com'
+    volumes:
+      - './apache/000-default.conf:/etc/apache2/sites-available/000-default.conf'

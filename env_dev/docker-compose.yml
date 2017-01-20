@@ -1,0 +1,47 @@
+version: '2'
+services:
+  apache-dev:
+    extends:
+      file: '../docker-compose-common.yml'
+      service: 'apache'
+    build:
+      context: './apache'
+      dockerfile: 'Dockerfile'
+    container_name: 'apache-dev'
+    links:
+      - 'mysql-dev:mysql.server.com'
+      - 'mailhog:mail.server.com'
+    volumes:
+      - './apache/000-default.conf:/etc/apache2/sites-available/000-default.conf'
+    environment:
+      TERM: 'xterm'
+
+  mysql-dev:
+    container_name: 'mysql-dev'
+    extends:
+      file: '../docker-compose-common.yml'
+      service: 'mysql'
+    environment:
+      TERM: 'xterm'
+
+  pma:
+    image: 'phpmyadmin/phpmyadmin'
+    container_name: 'pma'
+    links:
+      - 'mysql-dev:mysql.server.com'
+    ports:
+      - '81:80'
+    environment:
+      PMA_HOST: 'mysql.server.com'
+    environment:
+      TERM: 'xterm'
+
+  mailhog:
+    image: 'mailhog/mailhog'
+    container_name: 'mailhog'
+    ports:
+      - '8002:8025'
+    environment:
+      TERM: 'xterm'
+
+
